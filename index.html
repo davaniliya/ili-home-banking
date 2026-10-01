@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ILI Platform</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/ili-logo.svg" />
+  <link rel="apple-touch-icon" href="/assets/ili-logo.svg" />
+  <link rel="stylesheet" href="/style.css?v=20260920" />
+  <link rel="stylesheet" href="/style-extra.css?v=20260920" />
+</head>
+<body>
+  <div id="app">
+    <!-- AUTH -->
+    <div id="auth-page" class="auth-page">
+      <div class="auth-card">
+        <div class="auth-brand">
+          <img src="/assets/ili-logo.svg" alt="ILI" width="64" height="64" onerror="this.src='/assets/ili-logo.png'" />
+          <h1>ILI</h1>
+          <p data-i18n="auth_subtitle">خانه بانکی و پلتفرم</p>
+        </div>
+
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab active" data-tab="login" data-i18n="auth_login_tab">ورود</button>
+          <button type="button" class="auth-tab" data-tab="register" data-i18n="auth_register_tab">ثبت‌نام</button>
+        </div>
+
+        <div id="auth-error" class="error-msg hidden"></div>
+        <div id="auth-success" class="success-msg hidden"></div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-username" data-i18n="auth_username">نام کاربری</label>
+            <input type="text" id="login-username" autocomplete="username" required data-i18n-placeholder="auth_username_ph" placeholder="نام کاربری" tabindex="1" />
+          </div>
+          <div class="form-group">
+            <label for="login-password" data-i18n="auth_password">رمز عبور</label>
+            <input type="password" id="login-password" autocomplete="current-password" required data-i18n-placeholder="auth_password_ph" placeholder="رمز عبور" tabindex="2" />
+          </div>
+          <button type="submit" class="btn btn-primary" id="login-btn" tabindex="3" data-i18n="auth_login_btn">ورود</button>
+        </form>
+
+        <form id="register-form" class="hidden">
+          <div class="form-group">
+            <label for="reg-display" data-i18n="auth_display">نام نمایشی</label>
+            <input type="text" id="reg-display" required maxlength="50" data-i18n-placeholder="auth_display_ph" placeholder="نام شما" />
+          </div>
+          <div class="form-group">
+            <label for="reg-username" data-i18n="auth_username">نام کاربری</label>
+            <input type="text" id="reg-username" required minlength="3" maxlength="30" data-i18n-placeholder="auth_username_ph" placeholder="نام کاربری" />
+          </div>
+          <div class="form-group">
+            <label for="reg-password" data-i18n="auth_password">رمز عبور</label>
+            <input type="password" id="reg-password" required minlength="6" data-i18n-placeholder="auth_password_ph" placeholder="رمز عبور" />
+          </div>
+          <button type="submit" class="btn btn-primary" id="register-btn" data-i18n="auth_register_btn">ساخت حساب</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- APP SHELL -->
+    <div id="app-shell" class="app-shell">
+      <header class="topbar">
+        <div class="topbar-brand">
+          <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+          <img class="brand-logo" src="/assets/ili-logo.svg" alt="ILI" width="40" height="40" onerror="this.src='/assets/ili-logo.png'" />
+          <div>
+            <span class="brand-name">ILI</span>
+            <small id="topbar-section" data-i18n="top_section">پلتفرم</small>
+          </div>
+        </div>
+        <div class="mode-switch">
+          <button type="button" class="mode-btn active" id="mode-bank" data-mode="bank"><span class="mode-ico">◆</span><span class="mode-txt">Bank</span></button>
+          <button type="button" class="mode-btn" id="mode-gold" data-mode="gold" style="border:1px solid #fbbf24;background:rgba(251,191,36,0.15)"><span class="mode-ico">🥇</span><span class="mode-txt">طلا</span></button>
+          <button type="button" class="mode-btn" id="mode-msg" data-mode="messenger"><span class="mode-ico">✦</span><span class="mode-txt">Chat</span></button>
+          <button type="button" class="mode-btn" id="mode-programs" data-mode="programs"><span class="mode-ico">▶</span><span class="mode-txt">TV</span></button>
+          <button type="button" class="mode-btn" id="mode-news" data-mode="news"><span class="mode-ico">▣</span><span class="mode-txt">News</span></button>
+          <button type="button" class="mode-btn" id="mode-economy" data-mode="economy"><span class="mode-ico">₽</span><span class="mode-txt">Economy</span></button>
+        </div>
+        <div class="topbar-user">
+          <button type="button" class="btn-icon" id="lang-switch" title="Language">FA</button>
+          <button type="button" class="btn-icon" id="btn-fullscreen" title="Fullscreen">⛶</button>
+          <span id="topbar-name">—</span>
+        </div>
+      </header>
+
+      <!-- ===== BANK MODE ===== -->
+      <div id="bank-mode" class="layout">
+        <nav class="sidebar" id="sidebar">
+          <button type="button" class="nav-item active" data-page="overview"><span class="icon">◉</span> <span data-i18n="nav_overview">Overview</span></button>
+          <button type="button" class="nav-item" data-page="card"><span class="icon">▣</span> <span data-i18n="nav_card">Card</span></button>
+          <button type="button" class="nav-item" data-page="exchange"><span class="icon">⚡</span> <span data-i18n="nav_exchange">Exchange</span></button>
+          <button type="button" class="nav-item" data-page="scanner"><span class="icon">▢</span> <span data-i18n="nav_scanner">Scanner</span></button>
+          <button type="button" class="nav-item" data-page="profile"><span class="icon">☺</span> <span data-i18n="nav_profile">Profile</span></button>
+          <button type="button" class="nav-item" data-page="portfolio"><span class="icon">◐</span> <span data-i18n="nav_portfolio">پورتفوی</span></button>
+          <button type="button" class="nav-item" data-page="notifications"><span class="icon">🔔</span> <span data-i18n="nav_notifications">اعلان‌ها</span></button>
+          <button type="button" class="nav-item" data-page="help"><span class="icon">?</span> <span data-i18n="nav_help">راهنما</span></button>
+          <button type="button" class="nav-item" data-page="settings"><span class="icon">⚙</span> <span data-i18n="nav_settings">تنظیمات</span></button>
+          <button type="button" class="nav-item hidden" data-page="admin" id="nav-admin"><span class="icon">◆</span> <span data-i18n="nav_admin">Admin</span></button>
+        </nav>
+
+        <main class="main">
+          <!-- OVERVIEW -->
+          <section id="page-overview" class="page active">
+            <h2 class="page-title">Welcome, <span id="welcome-name">User</span></h2>
+            <p class="page-sub">Your ILI credit overview</p>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="label">Available ILI</div>
+                <div class="value" id="stat-balance">—</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">قیمت ILI</div>
+                <div class="value" id="stat-price">—</div>
+                <div class="price-change" id="stat-price-change"></div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Card Status</div>
+                <div class="value" id="stat-card-status">—</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Account Type</div>
+                <div class="value" id="stat-role">—</div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>Recent Activity</h3>
+              <div id="activity-list">
+                <div class="empty-state"><p>No activity yet.</p></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- CARD -->
+          <section id="page-card" class="page">
+            <h2 class="page-title">ILI Card</h2>
+            <p class="page-sub">Order and manage your virtual ILI card</p>
+
+            <div id="card-none" class="panel">
+              <h3>Order your ILI Card</h3>
+              <p style="color:var(--text-muted);margin-bottom:20px;font-size:0.9rem;">
+                Choose a design and create a 4-digit PIN. Your card will be reviewed by an administrator.
+              </p>
+              <form id="card-order-form">
+                <div class="form-group">
+                  <label for="card-design">Card Design</label>
+                  <select id="card-design" required>
+                    <option value="">Select design…</option>
+                    <option value="Random">Random</option>
+                    <option value="Girl">Girl</option>
+                    <option value="Boy">Boy</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="card-pin">4-Digit PIN</label>
+                  <input type="password" id="card-pin" maxlength="4" pattern="\d{4}" inputmode="numeric" required placeholder="••••" />
+                </div>
+                <button type="submit" class="btn btn-primary" id="card-order-btn" style="max-width:240px;">Order Card</button>
+              </form>
+            </div>
+
+            <div id="card-exists" class="hidden">
+              <div class="card-3d-wrap" id="card-3d-wrap"><div class="virtual-card card-3d" id="virtual-card">
+                <div class="card-brand">ILI HOME</div>
+                <div class="card-number copyable" id="vc-number" title="Click to copy">•••• •••• ••••</div>
+                <div class="card-meta">
+                  <div>
+                    <span>DESIGN</span>
+                    <strong id="vc-design">—</strong>
+                  </div>
+                  <div>
+                    <span>STATUS</span>
+                    <strong id="vc-status">—</strong>
+                  </div>
+                </div>
+                <div class="card-barcode" id="vc-barcode" title="Card barcode – use in Scanner"></div>
+              </div></div>
+              <p style="margin-top:16px;color:var(--text-muted);font-size:0.85rem;">
+                PIN is securely stored and never displayed. Click card number to copy. Barcode can be used in Scanner.
+              </p>
+            </div>
+          </section>
+
+          <!-- MONEY -->
+          <section id="page-money" class="page hidden">
+            <h2 class="page-title">Money Center</h2>
+            <p class="page-sub">Buy, sell & transfer ILI credits (manual payment workflow)</p>
+
+            <div class="panel-grid">
+              <!-- Transfer -->
+              <div class="panel">
+                <h3>Transfer ILI</h3>
+                <p class="hint">۵٪ کارمزد — اگر ۱۰۰ ILI بفرستید، گیرنده ۹۵ ILI دریافت می‌کند</p>
+                <form id="transfer-form">
+                  <div class="form-group">
+                    <label for="transfer-to">Recipient username</label>
+                    <input type="text" id="transfer-to" required placeholder="username" />
+                  </div>
+                  <div class="form-group">
+                    <label for="transfer-amount">Amount (ILI)</label>
+                    <input type="number" id="transfer-amount" min="1" step="1" required placeholder="100" />
+                  </div>
+                  <div id="transfer-preview" class="preview-box hidden"></div>
+                  <button type="submit" class="btn btn-primary" id="transfer-btn">Send Transfer</button>
+                </form>
+              </div>
+
+              <!-- Buy ILI -->
+              <div class="panel">
+                <h3>خرید ILI (Buy)</h3>
+                <p class="hint">مبلغ را به کارت بانک ملت واریز کنید. پس از تأیید ادمین، ILI به حساب شما اضافه می‌شود.</p>
+                <form id="deposit-form">
+                  <div class="form-group">
+                    <label for="deposit-amount">مقدار ILI</label>
+                    <input type="number" id="deposit-amount" min="1" step="1" required placeholder="1000" />
+                  </div>
+                  <div id="buy-preview" class="preview-box">
+                    <div>مبلغ قابل پرداخت: <strong id="buy-toman">—</strong> تومان</div>
+                    <div class="card-pay">شماره کارت: <strong id="pay-card-display">5022 2916 0709 8900</strong></div>
+                    <div class="small">بانک ملت — پس از واریز، درخواست را ثبت کنید</div>
+                  </div>
+                  <button type="submit" class="btn btn-primary" id="deposit-btn">ثبت درخواست خرید</button>
+                </form>
+              </div>
+
+              <!-- Sell ILI -->
+              <div class="panel">
+                <h3>فروش ILI (Sell)</h3>
+                <p class="hint">شماره کارت واقعی خود را وارد کنید. ادمین پس از بررسی، مبلغ را واریز می‌کند.</p>
+                <form id="withdraw-form">
+                  <div class="form-group">
+                    <label for="withdraw-amount">مقدار ILI برای فروش</label>
+                    <input type="number" id="withdraw-amount" min="1" step="1" required placeholder="500" />
+                  </div>
+                  <div class="form-group">
+                    <label for="withdraw-card">شماره کارت بانکی شما (۱۶ رقم)</label>
+                    <input type="text" id="withdraw-card" maxlength="19" required placeholder="6037-XXXX-XXXX-XXXX" />
+                  </div>
+                  <div id="sell-preview" class="preview-box hidden"></div>
+                  <button type="submit" class="btn btn-secondary" id="withdraw-btn">ثبت درخواست فروش</button>
+                </form>
+              </div>
+            </div>
+          </section>
+
+          <!-- QUICK TRADE -->
+          <section id="page-exchange" class="page">
+            <h2 class="page-title">Exchange</h2>
+            <p class="page-sub">Transfer · Buy · Sell ILI</p>
+            <div class="panel-grid">
+              <div class="panel">
+                <h3>⇄ Transfer ILI</h3>
+                <p class="hint">۵٪ کارمزد — انتقال مستقیم بین کاربران</p>
+                <form id="transfer-form">
+                  <div class="form-group">
+                    <label>Recipient username</label>
+                    <input type="text" id="transfer-to" required placeholder="username" />
+                  </div>
+                  <div class="form-group">
+                    <label>Amount (ILI)</label>
+                    <input type="number" id="transfer-amount" min="1" step="1" required placeholder="100" />
+                  </div>
+                  <div id="transfer-preview" class="preview-box hidden"></div>
+                  <button type="submit" class="btn btn-primary" id="transfer-btn">Send Transfer</button>
+                </form>
+              </div>
+              <div class="panel">
+                <h3>⚡ خرید سریع</h3>
+                <p class="hint">مقدار ILI را وارد کنید و درخواست خرید ثبت شود.</p>
+                <form id="quick-buy-form">
+                  <div class="form-group">
+                    <label>مقدار ILI</label>
+                    <input type="number" id="quick-buy-amount" min="1" step="1" required placeholder="1000" />
+                  </div>
+                  <div id="quick-buy-preview" class="preview-box">مبلغ: <strong id="quick-buy-toman">—</strong> تومان</div>
+                  <button type="submit" class="btn btn-primary" id="quick-buy-btn">ثبت خرید سریع</button>
+                </form>
+              </div>
+              <div class="panel">
+                <h3>⚡ فروش سریع</h3>
+                <p class="hint">مقدار + شماره کارت بانکی خود را وارد کنید.</p>
+                <form id="quick-sell-form">
+                  <div class="form-group">
+                    <label>مقدار ILI</label>
+                    <input type="number" id="quick-sell-amount" min="1" step="1" required placeholder="500" />
+                  </div>
+                  <div class="form-group">
+                    <label>شماره کارت بانکی (۱۶ رقم)</label>
+                    <input type="text" id="quick-sell-card" maxlength="19" required placeholder="6037-XXXX-XXXX-XXXX" />
+                  </div>
+                  <div id="quick-sell-preview" class="preview-box hidden"></div>
+                  <button type="submit" class="btn btn-secondary" id="quick-sell-btn">ثبت فروش سریع</button>
+                </form>
+              </div>
+            </div>
+          </section>
+
+          <!-- SCANNER -->
+          <section id="page-scanner" class="page">
+            <h2 class="page-title">Scanner</h2>
+            <p class="page-sub">بارکد کارت را وارد یا اسکن کنید تا مستقیماً ILI بفرستید</p>
+            <div class="panel" id="scanner-input-panel">
+              <div class="form-group">
+                <label>شماره کارت / بارکد (۱۲ رقم)</label>
+                <input type="text" id="scan-card-number" maxlength="16" placeholder="305064XXXXXX" />
+              </div>
+              <button type="button" class="btn btn-primary" id="scan-lookup-btn" style="max-width:220px;">جستجو / اسکن</button>
+            </div>
+            <div class="panel hidden" id="scanner-send-panel">
+              <h3>ارسال ILI به کارت</h3>
+              <p>گیرنده: <strong id="scan-recipient-name">—</strong></p>
+              <p>شماره کارت: <strong id="scan-recipient-card" class="copyable">—</strong></p>
+              <div class="form-group" style="margin-top:16px;">
+                <label>مقدار ILI</label>
+                <input type="number" id="scan-amount" min="1" step="1" required placeholder="100" />
+              </div>
+              <div class="form-group">
+                <label>PIN کارت خودتان (۴ رقم) برای تأیید</label>
+                <input type="password" id="scan-pin" maxlength="4" required placeholder="••••" />
+              </div>
+              <div class="action-btns">
+                <button type="button" class="btn btn-primary" id="scan-send-btn">تأیید و ارسال</button>
+                <button type="button" class="btn btn-secondary" id="scan-cancel-btn">انصراف</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- BILLS (hidden/removed) -->
+          <section id="page-bills" class="page hidden">
+            <h2 class="page-title">ILI Bills</h2>
+            <p class="page-sub">Internal bill payment module</p>
+            <div class="panel">
+              <div class="coming-soon">
+                <div class="icon" style="font-size:2.5rem;opacity:0.4;margin-bottom:12px;">☰</div>
+                <h3>Internal bill payment module</h3>
+                <p>Coming soon</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- SETTINGS -->
+          <section id="page-settings" class="page">
+            <div class="card" style="margin-bottom:16px">
+              <h3>تم ظاهری</h3>
+              <div class="settings-options" id="theme-options">
+                <button type="button" data-theme="midnight">شب عمیق</button>
+                <button type="button" data-theme="emerald">زمردی</button>
+                <button type="button" data-theme="rose">رز</button>
+                <button type="button" data-theme="sand">شنی</button>
+                <button type="button" data-theme="ocean">اقیانوسی</button>
+              </div>
+              <h3 style="margin-top:16px">تنظیمات سریع</h3>
+              <div class="settings-options" id="quick-options">
+                <button type="button" id="opt-refresh-price">بروزرسانی قیمت ILI</button>
+                <button type="button" id="opt-open-gold">بخش طلا</button>
+                <button type="button" id="opt-open-analysis">تحلیل بازار</button>
+                <button type="button" id="opt-open-news">اخبار</button>
+                <button type="button" id="opt-open-economy">اقتصاد</button>
+                <button type="button" id="opt-lang-fa">فارسی</button>
+                <button type="button" id="opt-lang-en">English</button>
+                <button type="button" id="opt-fullscreen">تمام‌صفحه</button>
+                <button type="button" id="opt-compact">حالت فشرده</button>
+                <button type="button" id="opt-large-text">متن بزرگ</button>
+                <button type="button" id="opt-reduce-motion">کاهش حرکت</button>
+                <button type="button" id="opt-sound">صدای اعلان</button>
+                <button type="button" id="opt-copy-card">کپی شماره کارت</button>
+                <button type="button" id="opt-export">خروجی تراکنش‌ها</button>
+              </div>
+            </div>
+
+            <h2 class="page-title">Settings</h2>
+            <p class="page-sub">زبان · تم · خروج</p>
+            <div class="panel">
+              <h3>زبان / Language</h3>
+              <div class="theme-picker" style="margin-bottom:16px;">
+                <button type="button" class="theme-btn" id="set-lang-fa">فارسی</button>
+                <button type="button" class="theme-btn" id="set-lang-en">English</button>
+              </div>
+              <h3>Theme</h3>
+              <div class="theme-picker">
+                <button type="button" class="theme-btn" data-theme="dark">🌙 Dark</button>
+                <button type="button" class="theme-btn" data-theme="light">☀️ Light</button>
+                <button type="button" class="theme-btn" data-theme="blue">💙 Blue</button>
+                <button type="button" class="theme-btn" data-theme="purple">💜 Purple</button>
+                <button type="button" class="theme-btn" data-theme="emerald">💚 Emerald</button>
+              </div>
+            </div>
+            <div class="panel">
+              <button type="button" class="btn btn-danger" id="logout-btn" style="max-width:200px;">Sign Out / خروج</button>
+            </div>
+          </section>
+
+          <!-- ADMIN -->
+          <section id="page-admin" class="page">
+            <h2 class="page-title">Administration</h2>
+            <p class="page-sub">Manage users, cards, transactions, and balances</p>
+
+            <div class="panel">
+              <h3>Users</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Username</th>
+                      <th>Display Name</th>
+                      <th>Role</th>
+                      <th>Balance</th>
+                      <th>Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-body">
+                    <tr><td colspan="7" class="empty-state">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>Cards</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Card Number</th>
+                      <th>Design</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-cards-body">
+                    <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>Transactions</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Type</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Note</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-tx-body">
+                    <tr><td colspan="7" class="empty-state">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3>Audit Logs</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Actor</th>
+                      <th>Action</th>
+                      <th>Details</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-audit-body">
+                    <tr><td colspan="4" class="empty-state">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- PROFILE -->
+          <section id="page-profile" class="page">
+            <h2 class="page-title">Profile</h2>
+            <p class="page-sub">اطلاعات شخصی و امنیت</p>
+            <div class="profile-folders">
+              <details class="folder" open>
+                <summary>📁 اطلاعات شخصی</summary>
+                <div class="folder-body">
+                  <div class="form-group">
+                    <label>Display Name</label>
+                    <input type="text" id="prof-display" maxlength="50" />
+                  </div>
+                  <div class="form-group">
+                    <label>کد ملی</label>
+                    <input type="text" id="prof-national" maxlength="10" placeholder="0012345678" />
+                  </div>
+                  <div class="form-group">
+                    <label>Bio</label>
+                    <input type="text" id="prof-bio" maxlength="200" placeholder="About you..." />
+                  </div>
+                  <button type="button" class="btn btn-primary" id="prof-save" style="max-width:180px;">ذخیره</button>
+                </div>
+              </details>
+              <details class="folder">
+                <summary>🔒 تغییر رمز عبور</summary>
+                <div class="folder-body">
+                  <div class="form-group">
+                    <label>رمز فعلی</label>
+                    <input type="password" id="pw-current" />
+                  </div>
+                  <div class="form-group">
+                    <label>رمز جدید</label>
+                    <input type="password" id="pw-new" minlength="6" />
+                  </div>
+                  <button type="button" class="btn btn-secondary" id="pw-save" style="max-width:180px;">تغییر رمز</button>
+                </div>
+              </details>
+              <details class="folder">
+                <summary>🔐 تغییر PIN کارت</summary>
+                <div class="folder-body">
+                  <div class="form-group">
+                    <label>PIN فعلی</label>
+                    <input type="password" id="pin-current" maxlength="4" />
+                  </div>
+                  <div class="form-group">
+                    <label>PIN جدید (۴ رقم)</label>
+                    <input type="password" id="pin-new" maxlength="4" />
+                  </div>
+                  <button type="button" class="btn btn-secondary" id="pin-save" style="max-width:180px;">تغییر PIN</button>
+                </div>
+              </details>
+            </div>
+          </section>
+
+          </main>
+      
+          <section id="page-help" class="page">
+            <div class="card"><h2 data-i18n="page_help">راهنما</h2><div id="help-content" class="help-list" data-i18n="loading">در حال بارگذاری…</div></div>
+          </section>
+          
+          <section id="page-portfolio" class="page">
+            <div class="card"><h2 data-i18n="page_portfolio">پورتفوی</h2><div id="portfolio-box"></div>
+            <p><span data-i18n="loyalty_points">امتیاز وفاداری</span>: <strong id="loyalty-points">0</strong></p></div>
+          </section>
+          <section id="page-notifications" class="page">
+            <div class="card"><h2 data-i18n="page_notifications">اعلان‌ها</h2><div id="notif-list"></div></div>
+          </section>
+
+      </div><!-- end bank-mode -->
+
+      <!-- ===== MESSENGER MODE ===== -->
+      <div id="messenger-mode" class="messenger-layout hidden">
+        <div class="msg-sidebar">
+          <div class="msg-sidebar-header">
+            <strong>Chats</strong>
+            <div class="msg-actions">
+              <button type="button" class="btn btn-sm btn-secondary" id="msg-new-chat" title="New chat">💬</button>
+              <button type="button" class="btn btn-sm btn-secondary" id="msg-new-group" title="New group">👥</button>
+              <button type="button" class="btn btn-sm btn-secondary" id="msg-new-channel" title="New channel">📢</button>
+              <button type="button" class="btn btn-sm btn-secondary" id="msg-gift-btn" title="Send Gift">🎁</button>
+            </div>
+          </div>
+          <div id="msg-chat-list" class="msg-chat-list"></div>
+        </div>
+        <div class="msg-main">
+          <div id="msg-empty" class="msg-empty">
+            <div class="empty-state">
+              <div style="font-size:3rem;opacity:0.3;margin-bottom:12px;">💬</div>
+              <p>Select a chat or create a group / channel</p>
+            </div>
+          </div>
+          <div id="msg-conversation" class="msg-conversation hidden">
+            <div id="msg-messages" class="msg-messages"></div>
+            <div class="msg-compose">
+              <input type="text" id="msg-input" placeholder="Message..." autocomplete="off" />
+              <button type="button" class="btn btn-primary" id="msg-send">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PROGRAMS MODE (TV) ===== -->
+      <div id="programs-mode" class="programs-layout hidden">
+        <div class="prog-sidebar">
+          <div class="prog-sidebar-title">📺 Networks</div>
+          <button type="button" class="prog-channel active" data-channel="family">👨‍👩‍👧‍👦 Family</button>
+          <button type="button" class="prog-channel" data-channel="musics">🎵 Musics</button>
+          <button type="button" class="prog-channel" data-channel="kids">🧸 Kids</button>
+          <p class="prog-hint">فایل‌ها را در پوشه public/programs/… بگذارید</p>
+        </div>
+        <div class="prog-main">
+          <div class="prog-player-wrap">
+            <div id="prog-empty" class="prog-empty">
+              <div style="font-size:4rem;opacity:0.35;">📺</div>
+              <p>یک شبکه را انتخاب کنید و محتوا را پخش کنید</p>
+            </div>
+            <video id="prog-video" class="prog-video hidden" controls playsinline></video>
+            <audio id="prog-audio" class="prog-audio hidden" controls></audio>
+            <img id="prog-image" class="prog-image hidden" alt="" />
+          </div>
+          <div class="prog-list-wrap">
+            <h3 id="prog-list-title">Family</h3>
+            <div id="prog-list" class="prog-list">
+              <div class="empty-state">در حال بارگذاری…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- NEWS -->
+      <div id="news-mode" class="news-layout hidden">
+        <div class="news-sidebar">
+          <div class="side-title">اخبار</div>
+          <div id="news-cats" class="news-cats"></div>
+        </div>
+        <div class="news-main">
+          <div id="news-list" class="news-list"></div>
+          <div id="news-detail" class="news-detail hidden"></div>
+        </div>
+      </div>
+
+      <!-- ECONOMY -->
+      <div id="economy-mode" class="economy-layout hidden">
+        <div class="eco-header">
+          <h2>اقتصاد / Economy <small style="font-size:0.75rem;opacity:0.7;">tgju.org</small></h2>
+          <p id="eco-updated">به‌روزرسانی: —</p>
+          <button type="button" class="btn btn-secondary" id="eco-refresh">بروزرسانی</button>
+        </div>
+        <div id="eco-grid" class="eco-grid"></div>
+        <p class="eco-note" id="eco-note"></p>
+      </div>
+
+    
+      <!-- ===== GOLD MODE (analysis + digital gold) ===== -->
+      
+      <div id="gold-mode" class="gold-layout" style="display:none">
+        <div class="gold-wrap">
+          <h2 style="margin:0 0 8px">🥇 بخش طلا <small style="font-size:0.7rem;opacity:0.6">v5</small></h2>
+          <p class="hint">تحلیل تکنیکال طلا و دلار + خرید طلای دیجیتال با ILI</p>
+          <div style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap">
+            <button type="button" class="btn btn-primary" id="gtab-analysis">تحلیل</button>
+            <button type="button" class="btn btn-secondary" id="gtab-trade">معامله طلا</button>
+            <button type="button" class="btn btn-secondary" id="analysis-refresh">بروزرسانی</button>
+            <span id="analysis-updated" class="hint"></span>
+          </div>
+          <div id="gold-tab-analysis">
+            <div class="stats-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="card"><h3>🥇 طلای ۱۸ عیار</h3><div id="analysis-gold">—</div></div>
+              <div class="card"><h3>💵 دلار</h3><div id="analysis-usd">—</div></div>
+            </div>
+          </div>
+          <div id="gold-tab-trade" style="display:none">
+            <div class="stats-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px">
+              <div class="stat-card"><div class="label">قیمت هر گرم</div><div class="value" id="gold-price">—</div></div>
+              <div class="stat-card"><div class="label">قیمت ILI</div><div class="value" id="gold-ili-price">—</div></div>
+              <div class="stat-card"><div class="label">ILI / گرم</div><div class="value" id="gold-ili-per-gram">—</div></div>
+              <div class="stat-card"><div class="label">موجودی طلا</div><div class="value" id="gold-balance">—</div></div>
+            </div>
+            <div class="card" style="margin-bottom:12px">
+              <h3>خرید طلا (حداقل ۱۰ ILI)</h3>
+              <input type="number" id="gold-buy-ili" min="10" step="1" placeholder="مقدار ILI" style="width:100%;margin:8px 0;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff"/>
+              <p id="gold-buy-preview" class="hint">—</p>
+              <button type="button" class="btn btn-primary" id="gold-buy-btn">خرید طلا</button>
+            </div>
+            <div class="card" style="margin-bottom:12px">
+              <h3>فروش طلا</h3>
+              <input type="number" id="gold-sell-grams" step="0.000001" placeholder="گرم" style="width:100%;margin:8px 0;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff"/>
+              <button type="button" class="btn btn-secondary" id="gold-sell-btn">فروش طلا</button>
+            </div>
+            <div class="card"><h3>تاریخچه</h3><div id="gold-history">—</div></div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div><!-- end app-shell -->
+  </div>
+
+<!-- Gift modal -->
+      <div id="gift-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+          <h3>ارسال گیفت / Send Gift</h3>
+          <p class="hint">۱ الماس ۲۰ · ۲ قلب ۱۰ · ۳ گل ۱۰ · ۴ شراب ۵۰ ILI</p>
+          <div class="gift-pick" id="gift-pick">
+            <button type="button" class="gift-pick-btn" data-code="1"><img src="/assets/gifts/diamond.png" alt=""><span>الماس · ۲۰</span></button>
+            <button type="button" class="gift-pick-btn" data-code="2"><img src="/assets/gifts/heart.png" alt=""><span>قلب · ۱۰</span></button>
+            <button type="button" class="gift-pick-btn" data-code="3"><img src="/assets/gifts/flower.png" alt=""><span>گل · ۱۰</span></button>
+            <button type="button" class="gift-pick-btn" data-code="4"><img src="/assets/gifts/wine.png" alt=""><span>شراب · ۵۰</span></button>
+          </div>
+          <div class="form-group">
+            <label>Username گیرنده</label>
+            <input type="text" id="gift-to-user" placeholder="username" list="gift-user-list" />
+            <datalist id="gift-user-list"></datalist>
+          </div>
+          <div class="action-btns">
+            <button type="button" class="btn btn-primary" id="gift-send-confirm">ارسال</button>
+            <button type="button" class="btn btn-secondary" id="gift-modal-close">بستن</button>
+          </div>
+        </div>
+      
+  <div id="toast-container"></div>
+  <script src="/app.js?v=v5chart"></script>
+  <script src="/messenger.js?v=20260919"></script>
+  <script src="/programs.js?v=20260919"></script>
+  <script src="/news-economy.js?v=gold2"></script>
+  <script src="/gold-analysis.js?v=v4live"></script>
+  <script src="/features.js?v=20260920"></script>
+</body>
+</html>

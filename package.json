@@ -1,0 +1,25 @@
+{
+  "name": "ili-home-banking",
+  "version": "1.0.0",
+  "description": "ILI Home Banking - Private/local internal ILI credit-platform prototype",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "ili",
+    "banking",
+    "prototype",
+    "sqlite"
+  ],
+  "author": "ILI",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^12.4.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1"
+  }
+}
